@@ -1,0 +1,9 @@
+
+{
+    "version": 2,
+    "name": "rbmsbot",
+    "routes": [
+        { "src": "/(.*)", "dest": "/internal/bot/index.go" }
+    ],
+    "public": true
+  }
