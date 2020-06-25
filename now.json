@@ -2,8 +2,8 @@
 {
     "version": 2,
     "name": "rbmsbot",
-    "routes": [
-        { "src": "/(.*)", "dest": "/internal/bot/index.go" }
-    ],
+    "env": {
+        "GO_BUILD_FLAGS": "-ldflags '-s -w'"
+    },
     "public": true
   }

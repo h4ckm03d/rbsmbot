@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"strings"
 	"time"
@@ -11,8 +12,7 @@ import (
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
-func main() {
-
+func bot() {
 	gotenv.Load()
 
 	b, err := tb.NewBot(tb.Settings{
@@ -47,4 +47,9 @@ func main() {
 	})
 
 	b.Start()
+}
+
+func Handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "<h1>Hello from rbsm!</h1>")
+	bot()
 }
