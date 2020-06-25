@@ -65,6 +65,5 @@ func bot() {
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "<h1>Hello from rbsm!</h1>")
 	bot()
 }
