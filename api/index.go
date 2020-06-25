@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/subosito/gotenv"
 	tb "gopkg.in/tucnak/telebot.v2"
@@ -15,10 +14,26 @@ import (
 func bot() {
 	gotenv.Load()
 
-	b, err := tb.NewBot(tb.Settings{
-		Token:  os.Getenv("TELEGRAM_TOKEN"),
-		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
-	})
+	var (
+		port      = os.Getenv("PORT")
+		publicURL = os.Getenv("PUBLIC_URL")     // you must add it to your config vars
+		token     = os.Getenv("TELEGRAM_TOKEN") // you must add it to your config vars
+	)
+
+	webhook := &tb.Webhook{
+		Listen:   ":" + port,
+		Endpoint: &tb.WebhookEndpoint{PublicURL: publicURL},
+	}
+
+	pref := tb.Settings{
+		Token:  token,
+		Poller: webhook,
+	}
+
+	b, err := tb.NewBot(pref)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	if err != nil {
 		log.Fatal(err)
@@ -51,5 +66,5 @@ func bot() {
 
 func Handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "<h1>Hello from rbsm!</h1>")
-	// bot()
+	bot()
 }
