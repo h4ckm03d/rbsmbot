@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/subosito/gotenv"
@@ -10,7 +12,7 @@ import (
 )
 
 func main() {
-	
+
 	gotenv.Load()
 
 	b, err := tb.NewBot(tb.Settings{
@@ -23,22 +25,25 @@ func main() {
 		return
 	}
 
-	b.Handle(tb.OnText, func(m *tb.Message) {
-		// all the text messages that weren't
-		// captured by existing handlers
+	b.Handle("/gpx", func(m *tb.Message) {
+		fmt.Println(strings.Fields(m.Payload))
+		resp := ""
+		for _, v := range strings.Fields(m.Payload) {
+			resp += fmt.Sprintf(`*GPX %s*
+- [Tokyo](https://duckduckgo.com)
+- [Malang](https://duckduckgo.com)
+- [Tokyo](https://duckduckgo.com)
+- [Malang](https://duckduckgo.com)
+`, strings.ToUpper(v))
+		}
+		b.Send(m.Sender, resp, &tb.SendOptions{
+			ParseMode:             tb.ModeMarkdown,
+			DisableWebPagePreview: true,
+		})
 	})
 
-	b.han("/gpx", func(m *tb.Message) {
-		m.Chat.Type == tb.OnText
-		b.Send(m.Sender, `*List GPX GMT+1*
-- [Tokyo](https://duckduckgo.com)
-- [Malang](https://duckduckgo.com)
-- [Tokyo](https://duckduckgo.com)
-- [Malang](https://duckduckgo.com)
-`,&tb.SendOptions{
-	ParseMode: tb.ModeMarkdown,
-	DisableWebPagePreview: true,
-})
+	b.Handle(tb.OnText, func(m *tb.Message) {
+		_, _ = b.Send(m.Sender, "Maaf bos, ga ngerti!")
 	})
 
 	b.Start()
