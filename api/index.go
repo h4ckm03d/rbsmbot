@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -18,11 +19,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	var (
 		token = os.Getenv("TELEGRAM_TOKEN") // you must add it to your config vars
 	)
-
-	webhook := &tb.Webhook{
-		Listen:   ":" + port,
-		Endpoint: &tb.WebhookEndpoint{PublicURL: publicURL},
-	}
 
 	b, err := tb.NewBot(tb.Settings{
 		Token:       token,
@@ -59,7 +55,13 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	})
 
 	var u tb.Update
-	if err = json.Unmarshal([]byte(r.Body), &u); err == nil {
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	if err = json.Unmarshal(body, &u); err == nil {
 		b.ProcessUpdate(u)
 	}
 }
