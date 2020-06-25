@@ -59,7 +59,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	})
 
 	var u tb.Update
-	if err = json.Unmarshal([]byte(req.Body), &u); err == nil {
+	if err = json.Unmarshal([]byte(r.Body), &u); err == nil {
 		b.ProcessUpdate(u)
 	}
 }
