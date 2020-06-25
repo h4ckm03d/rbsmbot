@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,13 +12,11 @@ import (
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
-func bot() {
+func Handler(w http.ResponseWriter, r *http.Request) {
 	gotenv.Load()
 
 	var (
-		port      = os.Getenv("PORT")
-		publicURL = os.Getenv("PUBLIC_URL")     // you must add it to your config vars
-		token     = os.Getenv("TELEGRAM_TOKEN") // you must add it to your config vars
+		token = os.Getenv("TELEGRAM_TOKEN") // you must add it to your config vars
 	)
 
 	webhook := &tb.Webhook{
@@ -25,12 +24,10 @@ func bot() {
 		Endpoint: &tb.WebhookEndpoint{PublicURL: publicURL},
 	}
 
-	pref := tb.Settings{
-		Token:  token,
-		Poller: webhook,
-	}
-
-	b, err := tb.NewBot(pref)
+	b, err := tb.NewBot(tb.Settings{
+		Token:       token,
+		Synchronous: true,
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -61,9 +58,8 @@ func bot() {
 		_, _ = b.Send(m.Sender, "Maaf bos, ga ngerti!")
 	})
 
-	b.Start()
-}
-
-func Handler(w http.ResponseWriter, r *http.Request) {
-	bot()
+	var u tb.Update
+	if err = json.Unmarshal([]byte(req.Body), &u); err == nil {
+		b.ProcessUpdate(u)
+	}
 }
