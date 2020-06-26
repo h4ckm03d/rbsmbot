@@ -50,12 +50,12 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		for k, v := range gpxFiles {
-			buffer.WriteString(fmt.Sprintf(`*GPX %s*\n`, strings.ToUpper(k)))
+			buffer.WriteString(fmt.Sprintf(`*GPX %s*<br />`, strings.ToUpper(k)))
 			sort.Strings(v)
 			for _, gpx := range v {
-				buffer.WriteString(fmt.Sprintf(`-[%s](https://raw.githubusercontent.com/h4ckm03d/rbsmbot/master/static/gpx/%s)\n`, gpx, url.PathEscape(gpx)))
+				buffer.WriteString(fmt.Sprintf(`-[%s](https://rbsmbot.vercel.app/static/gpx/%s)<br />`, strings.TrimPrefix(gpx, k), url.PathEscape(gpx)))
 			}
-			buffer.WriteString("\n")
+			buffer.WriteString("<br />")
 		}
 		b.Send(m.Sender, buffer.String(), &tb.SendOptions{
 			ParseMode:             tb.ModeMarkdown,
