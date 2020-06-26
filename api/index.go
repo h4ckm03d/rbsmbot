@@ -51,7 +51,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		}
 		for k, v := range gpxFiles {
 			buffer.WriteString(fmt.Sprintf(`*GPX %s*\n`, strings.ToUpper(k)))
-			sort.Strings(k)
+			sort.Strings(v)
 			for _, gpx := range v {
 				buffer.WriteString(fmt.Sprintf(`-[%s](https://raw.githubusercontent.com/h4ckm03d/rbsmbot/master/static/gpx/%s)\n`, gpx, url.PathEscape(gpx)))
 			}
