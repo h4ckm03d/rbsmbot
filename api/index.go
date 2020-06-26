@@ -49,11 +49,11 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			_, _ = b.Send(m.Sender, fmt.Sprintf("Maaf bos data gpx buat %v, g ketemu.", filter))
 			return
 		}
-		for gf, v := range gpxFiles {
+		for k, v := range gpxFiles {
 			buffer.WriteString(fmt.Sprintf(`*GPX %s*\n`, strings.ToUpper(k)))
 			sort.Strings(k)
-			for _, gpx := range gf {
-				buffer.WriteString(fmt.Sprintf(`-[%s](https://raw.githubusercontent.com/h4ckm03d/rbsmbot/master/static/gpx/%s)\n`, gf, url.PathEscape(gf)))
+			for _, gpx := range v {
+				buffer.WriteString(fmt.Sprintf(`-[%s](https://raw.githubusercontent.com/h4ckm03d/rbsmbot/master/static/gpx/%s)\n`, gpx, url.PathEscape(gpx)))
 			}
 			buffer.WriteString("\n")
 		}
