@@ -83,7 +83,7 @@ func getGPX(filters ...string) map[string][]string {
 	res := map[string][]string{}
 	for _, filter := range filters {
 		if val, ok := generatedMap[strings.ToUpper(filter)]; ok {
-			res = val
+			res[filter] = val
 		}
 	}
 
