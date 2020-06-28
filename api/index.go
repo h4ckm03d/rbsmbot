@@ -36,9 +36,36 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	b.Handle("/start", func(m *tb.Message) {
+		msg := `Selamat datang di Raid Battle Sukun/Malkot Bot
+List bot command:
+/gpx <timezone>: buat dapetin list gpx dalam timezone yg diminta
+
+---
+`
+		b.Send(m.Sender, msg, &tb.SendOptions{
+			ParseMode:             tb.ModeMarkdown,
+			DisableWebPagePreview: true,
+		})
+	})
+
 	b.Handle("/gpx", func(m *tb.Message) {
 		log.Println(strings.Fields(m.Payload))
 		var buffer bytes.Buffer
+		if m.Payload == "list" {
+			buffer.WriteString(`*GPX by timezone*:
+`)
+			for key := range generatedMap {
+				buffer.WriteString(fmt.Sprintf(`- %s )
+`, key))
+			}
+			b.Send(m.Sender, buffer.String(), &tb.SendOptions{
+				ParseMode:             tb.ModeMarkdown,
+				DisableWebPagePreview: true,
+			})
+			return
+		}
+
 		filter := strings.Fields(m.Payload)
 		if len(filter) == 0 {
 			_, _ = b.Send(m.Sender, "/gpx command perlu timezone nih, misal *GMT+2*")
@@ -54,7 +81,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 `, strings.ToUpper(k)))
 			sort.Strings(v)
 			for _, gpx := range v {
-				buffer.WriteString(fmt.Sprintf(`-[%s](https://rbsmbot.vercel.app/static/gpx/%s)
+				buffer.WriteString(fmt.Sprintf(`- [%s](https://raw.githubusercontent.com/h4ckm03d/rbsmbot/master/static/gpx/%s)
 `, strings.TrimPrefix(gpx, k), url.PathEscape(gpx)))
 			}
 			buffer.WriteString(`
