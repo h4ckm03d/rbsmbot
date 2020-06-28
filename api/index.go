@@ -55,7 +55,12 @@ List bot command:
 		if m.Payload == "list" {
 			buffer.WriteString(`*GPX by timezone*:
 `)
+			gmt := []string{}
 			for key := range generatedMap {
+				gmt = append(gmt, key)
+			}
+			sort.Strings(gmt)
+			for key := range gmt {
 				buffer.WriteString(fmt.Sprintf(`- %s
 `, key))
 			}
