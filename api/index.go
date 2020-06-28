@@ -56,7 +56,7 @@ List bot command:
 			buffer.WriteString(`*GPX by timezone*:
 `)
 			for key := range generatedMap {
-				buffer.WriteString(fmt.Sprintf(`- %s )
+				buffer.WriteString(fmt.Sprintf(`- %s
 `, key))
 			}
 			b.Send(m.Sender, buffer.String(), &tb.SendOptions{
