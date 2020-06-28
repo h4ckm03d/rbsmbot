@@ -60,7 +60,7 @@ List bot command:
 				gmt = append(gmt, key)
 			}
 			sort.Strings(gmt)
-			for key := range gmt {
+			for _, key := range gmt {
 				buffer.WriteString(fmt.Sprintf(`- %s
 `, key))
 			}
